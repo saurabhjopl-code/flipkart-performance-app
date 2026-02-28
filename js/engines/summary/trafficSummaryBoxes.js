@@ -3,7 +3,13 @@ import { getState } from "../../core/stateManager.js";
 export function calculateTrafficSummary() {
 
     const state = getState();
-    const data = state.filteredData.TRAFFIC_DATE || [];
+
+    const trafficKey = Object.keys(state.filteredData).find(k =>
+        k.toLowerCase().includes("traffic") &&
+        k.toLowerCase().includes("date")
+    );
+
+    const data = trafficKey ? state.filteredData[trafficKey] : [];
 
     let views = 0;
     let clicks = 0;
@@ -16,10 +22,8 @@ export function calculateTrafficSummary() {
         views += Number(row["Product Views"] || 0);
         clicks += Number(row["Product Clicks"] || 0);
         sales += Number(row["Sales"] || 0);
-
         ctrTotal += Number(row["CTR"] || 0);
         cvrTotal += Number(row["Conversion Rate"] || 0);
-
         rowCount++;
     });
 
