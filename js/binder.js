@@ -1,4 +1,4 @@
-import { setView } from "./core/stateManager.js";
+import { setView, getState } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
 
@@ -13,30 +13,49 @@ import { prepareTrafficChartData } from "./engines/summary/trafficSummaryChart.j
 import { renderExecutiveSummary } from "./renderers/summaryRenderer.js";
 import { renderLineChart } from "./renderers/chartRenderer.js";
 
+import { getGmvDailyReport } from "./engines/reports/gmvDailyReport.js";
+import { renderGmvDailyReport } from "./renderers/reportRenderer.js";
+
 function renderSummary(){
 
-    const gmvData=calculateGmvSummary();
-    const adsData=calculateAdsSummary();
-    const trafficData=calculateTrafficSummary();
+    document.getElementById("summaryWrapper").style.display = "block";
+    document.getElementById("reportWrapper").style.display = "none";
 
-    renderExecutiveSummary(gmvData,adsData,trafficData);
+    const gmvData = calculateGmvSummary();
+    const adsData = calculateAdsSummary();
+    const trafficData = calculateTrafficSummary();
 
-    renderLineChart("gmvChart",prepareGmvChartData());
-    renderLineChart("adsChart",prepareAdsChartData());
-    renderLineChart("trafficChart",prepareTrafficChartData());
+    renderExecutiveSummary(gmvData, adsData, trafficData);
+
+    renderLineChart("gmvChart", prepareGmvChartData());
+    renderLineChart("adsChart", prepareAdsChartData());
+    renderLineChart("trafficChart", prepareTrafficChartData());
+}
+
+function renderGmv(){
+
+    document.getElementById("summaryWrapper").style.display = "none";
+    document.getElementById("reportWrapper").style.display = "block";
+
+    const reportData = getGmvDailyReport();
+    renderGmvDailyReport(reportData);
 }
 
 export function initBinder(){
 
-    const navButtons=document.querySelectorAll(".nav-btn");
+    const navButtons = document.querySelectorAll(".nav-btn");
 
     navButtons.forEach(button=>{
         button.addEventListener("click",()=>{
-            const view=button.dataset.view;
+            const view = button.dataset.view;
             startProgress();
             setTimeout(()=>{
                 setView(view);
                 renderNavigation(view);
+
+                if(view === "summary") renderSummary();
+                if(view === "gmv") renderGmv();
+
                 finishProgress();
             },400);
         });
