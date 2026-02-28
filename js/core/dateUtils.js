@@ -1,8 +1,17 @@
 export function parseDate(dateString) {
     if (!dateString) return null;
 
-    const parts = dateString.split("/");
-    return new Date(parts[2], parts[1] - 1, parts[0]);
+    // Support both dd/mm/yyyy and dd-mm-yyyy
+    const separator = dateString.includes("/") ? "/" : "-";
+    const parts = dateString.split(separator);
+
+    if (parts.length !== 3) return null;
+
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    return new Date(year, month, day);
 }
 
 export function filterByDateRange(data, startDate, endDate, dateField) {
@@ -17,9 +26,4 @@ export function filterByDateRange(data, startDate, endDate, dateField) {
 
         return true;
     });
-}
-
-export function getLatestMonth(data, monthField) {
-    const months = data.map(row => parseDate(row[monthField])).filter(Boolean);
-    return new Date(Math.max(...months));
 }
