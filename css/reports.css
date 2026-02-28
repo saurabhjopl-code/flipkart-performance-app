@@ -29,3 +29,28 @@
     border-top: 1px solid #eee;
     font-size: 13px;
 }
+
+.report-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.report-tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: #eef2f7;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.report-tab.active {
+    background: #2f6fed;
+    color: white;
+}
+
+.report-tab:hover {
+    background: #dbe4ff;
+}
