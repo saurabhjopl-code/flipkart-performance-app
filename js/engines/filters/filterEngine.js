@@ -1,6 +1,5 @@
 import { getState, setFilters } from "../../core/stateManager.js";
 
-import { getRawGmvData } from "../data/gmvDataLoader.js"; // must exist
 import { calculateGmvSummary } from "../summary/gmvSummaryBoxes.js";
 import { calculateAdsSummary } from "../summary/adsSummaryBoxes.js";
 import { calculateTrafficSummary } from "../summary/trafficSummaryBoxes.js";
@@ -27,40 +26,9 @@ export function initFilters() {
 
     if (!startDateInput || !endDateInput || !monthSelect) return;
 
-    populateMonthDropdown();
-
     startDateInput.addEventListener("change", handleFilterChange);
     endDateInput.addEventListener("change", handleFilterChange);
     monthSelect.addEventListener("change", handleFilterChange);
-}
-
-/* ===========================
-   POPULATE MONTH DROPDOWN
-=========================== */
-
-function populateMonthDropdown() {
-
-    const monthSelect = document.getElementById("monthFilter");
-    if (!monthSelect) return;
-
-    const rawData = getRawGmvData();
-    if (!rawData || rawData.length === 0) return;
-
-    const monthSet = new Set();
-
-    rawData.forEach(row => {
-        const date = new Date(row.OrderDate || row.date);
-        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-        monthSet.add(key);
-    });
-
-    const sortedMonths = Array.from(monthSet).sort().reverse();
-
-    monthSelect.innerHTML = `<option value="">All</option>`;
-
-    sortedMonths.forEach(month => {
-        monthSelect.innerHTML += `<option value="${month}">${month}</option>`;
-    });
 }
 
 /* ===========================
