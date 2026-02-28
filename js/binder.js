@@ -1,6 +1,7 @@
 import { setView } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
+import { applyFilters } from "./engines/filters/filterEngine.js";
 
 export function initBinder() {
 
@@ -20,6 +21,10 @@ export function initBinder() {
             }, 400);
 
         });
+    });
+
+    document.addEventListener("filtersUpdated", () => {
+        applyFilters();
     });
 
 }
