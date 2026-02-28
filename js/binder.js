@@ -1,7 +1,6 @@
 import { setView } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
-import { applyFilters } from "./engines/filters/filterEngine.js";
 import { calculateGmvSummary } from "./engines/summary/gmvSummaryBoxes.js";
 import { prepareGmvChartData } from "./engines/summary/gmvSummaryChart.js";
 import { renderGmvSummaryBoxes } from "./renderers/summaryRenderer.js";
@@ -39,13 +38,5 @@ export function initBinder() {
         });
     });
 
-    document.addEventListener("filtersUpdated", () => {
-        applyFilters();
-        renderSummary();
-    });
-
-    document.addEventListener("dataReady", () => {
-        renderSummary();
-    });
-
+    return renderSummary;
 }
