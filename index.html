@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flipkart Performance Dashboard</title>
+
+    <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/navigation.css" />
+    <link rel="stylesheet" href="css/progress.css" />
+    <link rel="stylesheet" href="css/filter.css" />
+    <link rel="stylesheet" href="css/search.css" />
+    <link rel="stylesheet" href="css/summary.css" />
+    <link rel="stylesheet" href="css/reports.css" />
+    <link rel="stylesheet" href="css/tables.css" />
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="app-header">
+        <div class="header-left">
+            <img src="assets/logo.png" class="app-logo" />
+        </div>
+
+        <div class="header-center">
+            <h1 class="app-title">Flipkart Performance Dashboard</h1>
+        </div>
+
+        <div class="header-right">
+            <nav class="navigation">
+                <button class="nav-btn active" data-view="summary">Summary</button>
+                <button class="nav-btn" data-view="gmv">GMV</button>
+                <button class="nav-btn" data-view="ads">Ads</button>
+                <button class="nav-btn" data-view="traffic">Traffic</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- FILTER SECTION -->
+    <section class="filter-section">
+        <div class="filter-group">
+            <label>Start Date</label>
+            <input type="date" id="startDate" />
+        </div>
+
+        <div class="filter-group">
+            <label>End Date</label>
+            <input type="date" id="endDate" />
+        </div>
+
+        <div class="filter-group">
+            <label>Month</label>
+            <select id="monthFilter">
+                <option value="">All</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-section">
+        <input type="text" id="searchInput" placeholder="Search SKU / Campaign / Vertical..." />
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main class="content-area">
+
+        <!-- SUMMARY VIEW -->
+        <section id="summaryView" class="view-section active-view">
+            <div class="summary-wrapper" id="summaryWrapper"></div>
+            <div class="chart-wrapper" id="summaryCharts"></div>
+        </section>
+
+        <!-- GMV REPORT VIEW -->
+        <section id="gmvView" class="view-section">
+            <div id="gmvReports"></div>
+        </section>
+
+        <!-- ADS REPORT VIEW -->
+        <section id="adsView" class="view-section">
+            <div id="adsReports"></div>
+        </section>
+
+        <!-- TRAFFIC REPORT VIEW -->
+        <section id="trafficView" class="view-section">
+            <div id="trafficReports"></div>
+        </section>
+
+    </main>
+
+    <!-- Chart Library -->
+    <script src="lib/chart.min.js"></script>
+
+    <!-- JS Entry -->
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>
