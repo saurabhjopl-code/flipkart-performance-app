@@ -1,4 +1,4 @@
-import { setView, getState } from "./core/stateManager.js";
+import { setView } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
 
@@ -16,10 +16,27 @@ import { renderLineChart } from "./renderers/chartRenderer.js";
 import { getGmvDailyReport } from "./engines/reports/gmvDailyReport.js";
 import { renderGmvDailyReport } from "./renderers/reportRenderer.js";
 
-function renderSummary(){
+/* ===========================
+   VIEW SWITCHER (CORRECT WAY)
+=========================== */
 
-    document.getElementById("summaryWrapper").style.display = "block";
-    document.getElementById("reportWrapper").style.display = "none";
+function switchView(view) {
+    const views = document.querySelectorAll(".view-section");
+    views.forEach(section => section.classList.remove("active-view"));
+
+    const activeSection = document.getElementById(`${view}View`);
+    if (activeSection) {
+        activeSection.classList.add("active-view");
+    }
+}
+
+/* ===========================
+   SUMMARY VIEW
+=========================== */
+
+function renderSummary() {
+
+    switchView("summary");
 
     const gmvData = calculateGmvSummary();
     const adsData = calculateAdsSummary();
@@ -32,32 +49,44 @@ function renderSummary(){
     renderLineChart("trafficChart", prepareTrafficChartData());
 }
 
-function renderGmv(){
+/* ===========================
+   GMV VIEW
+=========================== */
 
-    document.getElementById("summaryWrapper").style.display = "none";
-    document.getElementById("reportWrapper").style.display = "block";
+function renderGmv() {
+
+    switchView("gmv");
 
     const reportData = getGmvDailyReport();
     renderGmvDailyReport(reportData);
 }
 
-export function initBinder(){
+/* ===========================
+   INIT
+=========================== */
+
+export function initBinder() {
 
     const navButtons = document.querySelectorAll(".nav-btn");
 
-    navButtons.forEach(button=>{
-        button.addEventListener("click",()=>{
+    navButtons.forEach(button => {
+        button.addEventListener("click", () => {
+
             const view = button.dataset.view;
+
             startProgress();
-            setTimeout(()=>{
+
+            setTimeout(() => {
+
                 setView(view);
                 renderNavigation(view);
 
-                if(view === "summary") renderSummary();
-                if(view === "gmv") renderGmv();
+                if (view === "summary") renderSummary();
+                if (view === "gmv") renderGmv();
 
                 finishProgress();
-            },400);
+
+            }, 400);
         });
     });
 
