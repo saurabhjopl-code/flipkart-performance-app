@@ -4,9 +4,11 @@ import { startProgress, finishProgress } from "./engines/progress/progressEngine
 
 import { calculateGmvSummary } from "./engines/summary/gmvSummaryBoxes.js";
 import { calculateAdsSummary } from "./engines/summary/adsSummaryBoxes.js";
+import { calculateTrafficSummary } from "./engines/summary/trafficSummaryBoxes.js";
 
 import { prepareGmvChartData } from "./engines/summary/gmvSummaryChart.js";
 import { prepareAdsChartData } from "./engines/summary/adsSummaryChart.js";
+import { prepareTrafficChartData } from "./engines/summary/trafficSummaryChart.js";
 
 import { renderExecutiveSummary } from "./renderers/summaryRenderer.js";
 import { renderLineChart } from "./renderers/chartRenderer.js";
@@ -15,18 +17,13 @@ function renderSummary(){
 
     const gmvData=calculateGmvSummary();
     const adsData=calculateAdsSummary();
+    const trafficData=calculateTrafficSummary();
 
-    renderExecutiveSummary(gmvData,adsData);
+    renderExecutiveSummary(gmvData,adsData,trafficData);
 
-    const gmvChart=prepareGmvChartData();
-    if(gmvChart.labels.length){
-        renderLineChart("gmvChart",gmvChart);
-    }
-
-    const adsChart=prepareAdsChartData();
-    if(adsChart.labels.length){
-        renderLineChart("adsChart",adsChart);
-    }
+    renderLineChart("gmvChart",prepareGmvChartData());
+    renderLineChart("adsChart",prepareAdsChartData());
+    renderLineChart("trafficChart",prepareTrafficChartData());
 }
 
 export function initBinder(){
