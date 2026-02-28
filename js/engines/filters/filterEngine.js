@@ -1,114 +1,73 @@
-import { getState, setFilters, setFilteredData } from "../../core/stateManager.js";
-import { filterByDateRange, parseDate } from "../../core/dateUtils.js";
+import { getState } from "../../core/stateManager.js";
+import { calculateGmvSummary } from "../summary/gmvSummaryBoxes.js";
+import { calculateAdsSummary } from "../summary/adsSummaryBoxes.js";
+import { calculateTrafficSummary } from "../summary/trafficSummaryBoxes.js";
 
-function populateMonthDropdown() {
+import { prepareGmvChartData } from "../summary/gmvSummaryChart.js";
+import { prepareAdsChartData } from "../summary/adsSummaryChart.js";
+import { prepareTrafficChartData } from "../summary/trafficSummaryChart.js";
 
-    const state = getState();
-    const data = state.rawData.GMV_DATE || [];
+import { renderExecutiveSummary } from "../../renderers/summaryRenderer.js";
+import { renderLineChart } from "../../renderers/chartRenderer.js";
 
-    const monthSet = new Set();
+import { getGmvDailyReport } from "../reports/gmvDailyReport.js";
+import { renderGmvDailyReport } from "../../renderers/reportRenderer.js";
 
-    data.forEach(row => {
-        if (row["Order Date"]) {
-            const d = parseDate(row["Order Date"]);
-            if (d) {
-                monthSet.add(`${d.getFullYear()}-${d.getMonth()}`);
-            }
-        }
-    });
-
-    const months = Array.from(monthSet).sort();
-
-    const select = document.getElementById("monthFilter");
-    select.innerHTML = `<option value="">All</option>`;
-
-    months.forEach(m => {
-        const [year, month] = m.split("-");
-        const label = `${String(Number(month)+1).padStart(2,"0")}/${year}`;
-        select.innerHTML += `<option value="${m}">${label}</option>`;
-    });
-
-    if (months.length) {
-        select.value = months[months.length-1];
-        setFilters({ month: months[months.length-1] });
-    }
-}
+/* ===========================
+   APPLY FILTERS
+=========================== */
 
 export function applyFilters() {
 
     const state = getState();
-    const { startDate, endDate, month } = state.filters;
-    const filtered = {};
+    const currentView = state.view;
 
-    Object.keys(state.rawData).forEach(key => {
+    /* ===========================
+       SUMMARY VIEW
+    =========================== */
 
-        const dataset = state.rawData[key];
-        if (!dataset?.length) {
-            filtered[key] = [];
-            return;
-        }
+    if (currentView === "summary") {
 
-        const dateField = Object.keys(dataset[0]).find(col =>
-            col.toLowerCase().includes("date")
-        );
+        const gmvData = calculateGmvSummary();
+        const adsData = calculateAdsSummary();
+        const trafficData = calculateTrafficSummary();
 
-        let temp = dataset;
+        renderExecutiveSummary(gmvData, adsData, trafficData);
 
-        if (month && dateField) {
+        renderLineChart("gmvChart", prepareGmvChartData());
+        renderLineChart("adsChart", prepareAdsChartData());
+        renderLineChart("trafficChart", prepareTrafficChartData());
 
-            const [year, monthIndex] = month.split("-").map(Number);
+        return;
+    }
 
-            temp = dataset.filter(row => {
-                const d = parseDate(row[dateField]);
-                if (!d) return false;
-                return (
-                    d.getFullYear() === year &&
-                    d.getMonth() === monthIndex
-                );
-            });
+    /* ===========================
+       GMV VIEW
+    =========================== */
 
-        } else if (dateField) {
+    if (currentView === "gmv") {
 
-            temp = filterByDateRange(dataset, startDate, endDate, dateField);
-        }
+        const reportData = getGmvDailyReport();
+        renderGmvDailyReport(reportData, "gmvReportContent");
 
-        filtered[key] = temp;
-    });
+        return;
+    }
 
-    setFilteredData(filtered);
-}
+    /* ===========================
+       ADS VIEW (future ready)
+    =========================== */
 
-export function initFilters(onFilterChange) {
+    if (currentView === "ads") {
+        // Add when ads reports built
+        return;
+    }
 
-    const startInput = document.getElementById("startDate");
-    const endInput = document.getElementById("endDate");
-    const monthSelect = document.getElementById("monthFilter");
+    /* ===========================
+       TRAFFIC VIEW (future ready)
+    =========================== */
 
-    startInput.addEventListener("change", () => {
-        setFilters({ startDate: new Date(startInput.value), month: null });
-        monthSelect.value = "";
-        applyFilters();
-        onFilterChange();
-    });
-
-    endInput.addEventListener("change", () => {
-        setFilters({ endDate: new Date(endInput.value), month: null });
-        monthSelect.value = "";
-        applyFilters();
-        onFilterChange();
-    });
-
-    monthSelect.addEventListener("change", () => {
-        setFilters({ month: monthSelect.value, startDate: null, endDate: null });
-        startInput.value = "";
-        endInput.value = "";
-        applyFilters();
-        onFilterChange();
-    });
-
-    document.addEventListener("dataReady", () => {
-        populateMonthDropdown();
-        applyFilters();
-        onFilterChange();
-    });
+    if (currentView === "traffic") {
+        // Add when traffic reports built
+        return;
+    }
 }
