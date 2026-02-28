@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initHeader();
     initFilters();
+    initBinder();
 
     startProgress();
 
@@ -26,6 +27,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     finishProgress();
 
-    initBinder();
+    document.dispatchEvent(new Event("dataReady"));
 
 });
