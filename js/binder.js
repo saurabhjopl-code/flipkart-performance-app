@@ -14,9 +14,8 @@ import { prepareAdsChartData } from "./engines/summary/adsSummaryChart.js";
 import { prepareTrafficChartData } from "./engines/summary/trafficSummaryChart.js";
 
 import { getGmvDailyReport } from "./engines/reports/gmvDailyReport.js";
-import { getGmvMonthReport } from "./engines/reports/gmvMonthReport.js";
+import { renderGmvDailyReport } from "./renderers/reportRenderer.js";
 
-import { renderGmvDailyReport, renderGmvMonthReport } from "./renderers/reportRenderer.js";
 
 function renderSummary() {
 
@@ -31,44 +30,80 @@ function renderSummary() {
     renderLineChart("trafficChart", prepareTrafficChartData());
 }
 
-async function renderGmv(viewType = "daily") {
+
+function renderGmv() {
 
     const container = document.getElementById("gmvReports");
-    container.innerHTML = "";
+    if (!container) return;
 
-    if (viewType === "daily") {
-        const data = getGmvDailyReport();
-        renderGmvDailyReport(data, "gmvReports");
-    }
+    // Restore tab layout
+    container.innerHTML = `
+        <div class="report-tabs">
+            <button class="report-tab active" data-tab="daily">Daily</button>
+            <button class="report-tab" data-tab="month">Month</button>
+            <button class="report-tab" data-tab="sku">SKU</button>
+        </div>
+        <div id="gmvReportContent"></div>
+    `;
 
-    if (viewType === "month") {
-        const data = await getGmvMonthReport();
-        renderGmvMonthReport(data, "gmvReports");
-    }
+    const content = document.getElementById("gmvReportContent");
+
+    // Default load daily
+    const dailyData = getGmvDailyReport();
+    renderGmvDailyReport(dailyData, "gmvReportContent");
+
+    const tabs = container.querySelectorAll(".report-tab");
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const type = tab.dataset.tab;
+
+            if (type === "daily") {
+                const data = getGmvDailyReport();
+                renderGmvDailyReport(data, "gmvReportContent");
+            }
+
+            if (type === "month") {
+                content.innerHTML = "<p>Month report coming next.</p>";
+            }
+
+            if (type === "sku") {
+                content.innerHTML = "<p>SKU report coming next.</p>";
+            }
+        });
+    });
 }
+
 
 export function initBinder() {
 
     const navButtons = document.querySelectorAll(".nav-btn");
 
     navButtons.forEach(button => {
-        button.addEventListener("click", async () => {
+
+        button.addEventListener("click", () => {
 
             const view = button.dataset.view;
 
             startProgress();
 
-            setTimeout(async () => {
+            setTimeout(() => {
 
                 setView(view);
                 renderNavigation(view);
 
                 if (view === "summary") renderSummary();
-                if (view === "gmv") await renderGmv("daily");
+                if (view === "gmv") renderGmv();
 
                 finishProgress();
 
             }, 300);
         });
+
     });
+
 }
