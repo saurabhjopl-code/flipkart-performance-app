@@ -15,12 +15,12 @@ export function calculateAdsSummary() {
         revenue += Number(row["Revenue"] || 0);
     });
 
-    const roi = adSpend ? (revenue / adSpend).toFixed(2) : 0;
+    const roi = adSpend ? revenue / adSpend : 0;
 
     return {
-        adSpend,
+        adSpend: adSpend.toFixed(2),
         convertedUnits,
-        revenue,
-        roi
+        revenue: revenue.toFixed(2),
+        roi: roi.toFixed(2)
     };
 }
