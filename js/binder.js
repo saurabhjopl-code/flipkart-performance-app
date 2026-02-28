@@ -11,36 +11,37 @@ import { prepareAdsChartData } from "./engines/summary/adsSummaryChart.js";
 import { renderExecutiveSummary } from "./renderers/summaryRenderer.js";
 import { renderLineChart } from "./renderers/chartRenderer.js";
 
-function renderSummary() {
+function renderSummary(){
 
-    const gmvData = calculateGmvSummary();
-    const adsData = calculateAdsSummary();
+    const gmvData=calculateGmvSummary();
+    const adsData=calculateAdsSummary();
 
-    renderExecutiveSummary(gmvData, adsData);
+    renderExecutiveSummary(gmvData,adsData);
 
-    const gmvChartData = prepareGmvChartData();
-    if (gmvChartData.labels.length > 0) {
-        renderLineChart("gmvChart", gmvChartData);
+    const gmvChart=prepareGmvChartData();
+    if(gmvChart.labels.length){
+        renderLineChart("gmvChart",gmvChart);
+    }
+
+    const adsChart=prepareAdsChartData();
+    if(adsChart.labels.length){
+        renderLineChart("adsChart",adsChart);
     }
 }
 
-export function initBinder() {
+export function initBinder(){
 
-    const navButtons = document.querySelectorAll(".nav-btn");
+    const navButtons=document.querySelectorAll(".nav-btn");
 
-    navButtons.forEach(button => {
-        button.addEventListener("click", () => {
-
-            const view = button.dataset.view;
-
+    navButtons.forEach(button=>{
+        button.addEventListener("click",()=>{
+            const view=button.dataset.view;
             startProgress();
-
-            setTimeout(() => {
+            setTimeout(()=>{
                 setView(view);
                 renderNavigation(view);
                 finishProgress();
-            }, 400);
-
+            },400);
         });
     });
 
