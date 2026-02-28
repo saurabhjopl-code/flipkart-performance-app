@@ -3,7 +3,13 @@ import { getState } from "../../core/stateManager.js";
 export function prepareTrafficChartData() {
 
     const state = getState();
-    const data = state.filteredData.TRAFFIC_DATE || [];
+
+    const trafficKey = Object.keys(state.filteredData).find(k =>
+        k.toLowerCase().includes("traffic") &&
+        k.toLowerCase().includes("date")
+    );
+
+    const data = trafficKey ? state.filteredData[trafficKey] : [];
 
     const labels = [];
     const views = [];
