@@ -17,6 +17,10 @@ import { getGmvDailyReport } from "./engines/reports/gmvDailyReport.js";
 import { renderGmvDailyReport } from "./renderers/reportRenderer.js";
 
 
+/* ===============================
+   SUMMARY RENDER
+================================ */
+
 function renderSummary() {
 
     const gmvData = calculateGmvSummary();
@@ -31,12 +35,15 @@ function renderSummary() {
 }
 
 
+/* ===============================
+   GMV RENDER
+================================ */
+
 function renderGmv() {
 
     const container = document.getElementById("gmvReports");
     if (!container) return;
 
-    // Restore tab layout
     container.innerHTML = `
         <div class="report-tabs">
             <button class="report-tab active" data-tab="daily">Daily</button>
@@ -48,7 +55,7 @@ function renderGmv() {
 
     const content = document.getElementById("gmvReportContent");
 
-    // Default load daily
+    // Default Daily
     const dailyData = getGmvDailyReport();
     renderGmvDailyReport(dailyData, "gmvReportContent");
 
@@ -79,6 +86,10 @@ function renderGmv() {
 }
 
 
+/* ===============================
+   INIT BINDER
+================================ */
+
 export function initBinder() {
 
     const navButtons = document.querySelectorAll(".nav-btn");
@@ -101,9 +112,20 @@ export function initBinder() {
 
                 finishProgress();
 
-            }, 300);
+            }, 200);
         });
 
     });
 
+    /* ===============================
+       AUTO LOAD DEFAULT VIEW
+    ================================= */
+
+    document.addEventListener("dataReady", () => {
+
+        setView("summary");
+        renderNavigation("summary");
+        renderSummary();
+
+    });
 }
