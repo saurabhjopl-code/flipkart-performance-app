@@ -1,4 +1,5 @@
-import { getState } from "../../core/stateManager.js";
+import { getState, setFilters } from "../../core/stateManager.js";
+
 import { calculateGmvSummary } from "../summary/gmvSummaryBoxes.js";
 import { calculateAdsSummary } from "../summary/adsSummaryBoxes.js";
 import { calculateTrafficSummary } from "../summary/trafficSummaryBoxes.js";
@@ -14,7 +15,43 @@ import { getGmvDailyReport } from "../reports/gmvDailyReport.js";
 import { renderGmvDailyReport } from "../../renderers/reportRenderer.js";
 
 /* ===========================
-   APPLY FILTERS
+   INITIALIZE FILTERS
+=========================== */
+
+export function initFilters() {
+
+    const startDateInput = document.getElementById("startDate");
+    const endDateInput = document.getElementById("endDate");
+    const monthSelect = document.getElementById("monthFilter");
+
+    if (!startDateInput || !endDateInput || !monthSelect) return;
+
+    startDateInput.addEventListener("change", handleFilterChange);
+    endDateInput.addEventListener("change", handleFilterChange);
+    monthSelect.addEventListener("change", handleFilterChange);
+}
+
+/* ===========================
+   HANDLE FILTER CHANGE
+=========================== */
+
+function handleFilterChange() {
+
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+    const month = document.getElementById("monthFilter").value;
+
+    setFilters({
+        startDate,
+        endDate,
+        month
+    });
+
+    applyFilters();
+}
+
+/* ===========================
+   APPLY FILTERS (NO REDIRECT)
 =========================== */
 
 export function applyFilters() {
@@ -22,9 +59,7 @@ export function applyFilters() {
     const state = getState();
     const currentView = state.view;
 
-    /* ===========================
-       SUMMARY VIEW
-    =========================== */
+    /* ---------- SUMMARY ---------- */
 
     if (currentView === "summary") {
 
@@ -41,9 +76,7 @@ export function applyFilters() {
         return;
     }
 
-    /* ===========================
-       GMV VIEW
-    =========================== */
+    /* ---------- GMV ---------- */
 
     if (currentView === "gmv") {
 
@@ -53,21 +86,15 @@ export function applyFilters() {
         return;
     }
 
-    /* ===========================
-       ADS VIEW (future ready)
-    =========================== */
+    /* ---------- ADS ---------- */
 
     if (currentView === "ads") {
-        // Add when ads reports built
         return;
     }
 
-    /* ===========================
-       TRAFFIC VIEW (future ready)
-    =========================== */
+    /* ---------- TRAFFIC ---------- */
 
     if (currentView === "traffic") {
-        // Add when traffic reports built
         return;
     }
 }
