@@ -13,7 +13,10 @@ function renderSummary() {
     renderGmvSummaryBoxes(summaryData);
 
     const chartData = prepareGmvChartData();
-    renderLineChart("gmvChart", chartData);
+
+    if (chartData.labels.length > 0) {
+        renderLineChart("gmvChart", chartData);
+    }
 }
 
 export function initBinder() {
@@ -41,5 +44,8 @@ export function initBinder() {
         renderSummary();
     });
 
-    renderSummary();
+    document.addEventListener("dataReady", () => {
+        renderSummary();
+    });
+
 }
