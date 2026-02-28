@@ -10,7 +10,7 @@ function populateMonthDropdown() {
 
     data.forEach(row => {
         if (row["Order Date"]) {
-            monthSet.add(row["Order Date"].substring(3, 10)); 
+            monthSet.add(row["Order Date"].substring(3, 10));
         }
     });
 
@@ -66,11 +66,9 @@ export function applyFilters() {
     });
 
     setFilteredData(filtered);
-
-    document.dispatchEvent(new Event("filtersUpdated"));
 }
 
-export function initFilters() {
+export function initFilters(onFilterChange) {
 
     const startInput = document.getElementById("startDate");
     const endInput = document.getElementById("endDate");
@@ -83,6 +81,7 @@ export function initFilters() {
         });
         monthSelect.value = "";
         applyFilters();
+        onFilterChange();
     });
 
     endInput.addEventListener("change", () => {
@@ -92,6 +91,7 @@ export function initFilters() {
         });
         monthSelect.value = "";
         applyFilters();
+        onFilterChange();
     });
 
     monthSelect.addEventListener("change", () => {
@@ -103,11 +103,12 @@ export function initFilters() {
         startInput.value = "";
         endInput.value = "";
         applyFilters();
+        onFilterChange();
     });
 
     document.addEventListener("dataReady", () => {
         populateMonthDropdown();
         applyFilters();
+        onFilterChange();
     });
-
 }
