@@ -4,10 +4,12 @@ export function calculateTrafficSummary() {
 
     const state = getState();
 
-    const trafficKey = Object.keys(state.filteredData).find(k =>
-        k.toLowerCase().includes("traffic") &&
-        k.toLowerCase().includes("date")
-    );
+    const trafficKey = Object.keys(state.filteredData).find(key => {
+        const dataset = state.filteredData[key];
+        if (!dataset?.length) return false;
+        const columns = Object.keys(dataset[0]);
+        return columns.includes("Product Views") && columns.includes("Product Clicks");
+    });
 
     const data = trafficKey ? state.filteredData[trafficKey] : [];
 
@@ -27,8 +29,8 @@ export function calculateTrafficSummary() {
         rowCount++;
     });
 
-    const avgCTR = rowCount ? (ctrTotal / rowCount).toFixed(2) : 0;
-    const avgCVR = rowCount ? (cvrTotal / rowCount).toFixed(2) : 0;
+    const avgCTR = rowCount ? ((ctrTotal / rowCount) * 100).toFixed(2) : 0;
+    const avgCVR = rowCount ? ((cvrTotal / rowCount) * 100).toFixed(2) : 0;
 
     return {
         views,
