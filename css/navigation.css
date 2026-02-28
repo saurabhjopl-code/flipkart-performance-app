@@ -1,0 +1,18 @@
+.navigation {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-btn {
+    padding: 8px 18px;
+    border: none;
+    background: #eaeaea;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.nav-btn.active {
+    background: #2874f0;
+    color: white;
+}
