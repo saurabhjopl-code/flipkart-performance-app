@@ -1,5 +1,31 @@
-#gmvReports,
-#adsReports,
-#trafficReports {
-    margin-top: 20px;
+.report-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.report-table-wrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    overflow-x: auto;
+}
+
+.report-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.report-table th {
+    text-align: left;
+    padding: 12px;
+    background: #f5f5f5;
+    font-size: 13px;
+}
+
+.report-table td {
+    padding: 12px;
+    border-top: 1px solid #eee;
+    font-size: 13px;
 }
