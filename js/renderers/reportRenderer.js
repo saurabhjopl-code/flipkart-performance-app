@@ -39,20 +39,12 @@ export function renderGmvDailyReport(data, targetId) {
         `;
     });
 
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
+    html += `</tbody></table></div>`;
 
     container.innerHTML = html;
 }
 
 
-
-/* ===================================================
-   MONTH REPORT (M-O-M CONSOLIDATION SHEET)
-=================================================== */
 
 export function renderGmvMonthReport(data, targetId) {
 
@@ -101,11 +93,55 @@ export function renderGmvMonthReport(data, targetId) {
         `;
     });
 
-    html += `
-                </tbody>
-            </table>
-        </div>
+    html += `</tbody></table></div>`;
+
+    container.innerHTML = html;
+}
+
+
+
+export function renderGmvSkuReport(data, targetId) {
+
+    const container = document.getElementById(targetId);
+    if (!container) return;
+
+    if (!data || data.length === 0) {
+        container.innerHTML = "<p>No SKU data available.</p>";
+        return;
+    }
+
+    let html = `
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Gross Units</th>
+                        <th>GMV</th>
+                        <th>Cancel Units</th>
+                        <th>Return Units</th>
+                        <th>Final Units</th>
+                        <th>Final Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
+
+    data.forEach(row => {
+        html += `
+            <tr>
+                <td>${row.SKU || row.sku || "-"}</td>
+                <td>${row["Gross Units"] || 0}</td>
+                <td>${row.GMV}</td>
+                <td>${row["Cancel Units"] || 0}</td>
+                <td>${row["Return Units"] || 0}</td>
+                <td>${row["Final Units"] || 0}</td>
+                <td>${row["Final Revenue"] || 0}</td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table></div>`;
 
     container.innerHTML = html;
 }
