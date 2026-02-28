@@ -1,20 +1,26 @@
 import { setView } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
+
 import { calculateGmvSummary } from "./engines/summary/gmvSummaryBoxes.js";
+import { calculateAdsSummary } from "./engines/summary/adsSummaryBoxes.js";
+
 import { prepareGmvChartData } from "./engines/summary/gmvSummaryChart.js";
-import { renderGmvSummaryBoxes } from "./renderers/summaryRenderer.js";
+import { prepareAdsChartData } from "./engines/summary/adsSummaryChart.js";
+
+import { renderExecutiveSummary } from "./renderers/summaryRenderer.js";
 import { renderLineChart } from "./renderers/chartRenderer.js";
 
 function renderSummary() {
 
-    const summaryData = calculateGmvSummary();
-    renderGmvSummaryBoxes(summaryData);
+    const gmvData = calculateGmvSummary();
+    const adsData = calculateAdsSummary();
 
-    const chartData = prepareGmvChartData();
+    renderExecutiveSummary(gmvData, adsData);
 
-    if (chartData.labels.length > 0) {
-        renderLineChart("gmvChart", chartData);
+    const gmvChartData = prepareGmvChartData();
+    if (gmvChartData.labels.length > 0) {
+        renderLineChart("gmvChart", gmvChartData);
     }
 }
 
