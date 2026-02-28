@@ -1,4 +1,4 @@
-import { setView } from "./core/stateManager.js";
+import { setView, getState } from "./core/stateManager.js";
 import { renderNavigation } from "./renderers/navigationRenderer.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
 
@@ -17,7 +17,7 @@ import { getGmvDailyReport } from "./engines/reports/gmvDailyReport.js";
 import { renderGmvDailyReport } from "./renderers/reportRenderer.js";
 
 /* ===========================
-   VIEW SWITCHER (CORRECT WAY)
+   VIEW SWITCHING
 =========================== */
 
 function switchView(view) {
@@ -31,7 +31,7 @@ function switchView(view) {
 }
 
 /* ===========================
-   SUMMARY VIEW
+   SUMMARY
 =========================== */
 
 function renderSummary() {
@@ -50,15 +50,57 @@ function renderSummary() {
 }
 
 /* ===========================
-   GMV VIEW
+   GMV WITH INTERNAL TABS
 =========================== */
 
 function renderGmv() {
 
     switchView("gmv");
 
-    const reportData = getGmvDailyReport();
-    renderGmvDailyReport(reportData);
+    const container = document.getElementById("gmvReports");
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="report-tabs">
+            <button class="report-tab active" data-type="daily">Daily</button>
+            <button class="report-tab" data-type="month">Month</button>
+            <button class="report-tab" data-type="sku">SKU</button>
+        </div>
+        <div id="gmvReportContent"></div>
+    `;
+
+    renderGmvDaily();
+
+    const tabs = container.querySelectorAll(".report-tab");
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const type = tab.dataset.type;
+
+            if (type === "daily") renderGmvDaily();
+            if (type === "month") renderGmvMonth();
+            if (type === "sku") renderGmvSku();
+        });
+    });
+}
+
+function renderGmvDaily() {
+    const data = getGmvDailyReport();
+    renderGmvDailyReport(data, "gmvReportContent");
+}
+
+/* Placeholder functions for future reports */
+function renderGmvMonth() {
+    const container = document.getElementById("gmvReportContent");
+    container.innerHTML = "<p>Month-wise GMV Report coming next...</p>";
+}
+
+function renderGmvSku() {
+    const container = document.getElementById("gmvReportContent");
+    container.innerHTML = "<p>SKU-wise GMV Report coming next...</p>";
 }
 
 /* ===========================
@@ -86,7 +128,7 @@ export function initBinder() {
 
                 finishProgress();
 
-            }, 400);
+            }, 300);
         });
     });
 
