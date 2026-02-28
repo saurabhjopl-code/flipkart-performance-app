@@ -1,17 +1,35 @@
-table {
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 40px;
     background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    font-size: 14px;
 }
 
-th, td {
-    padding: 10px;
-    border: 1px solid #eee;
+.data-table thead {
+    background: #f5f7fb;
+}
+
+.data-table th {
     text-align: left;
+    padding: 14px;
+    font-weight: 600;
+    color: #2d3a4b;
+    border-bottom: 1px solid #e6e9f0;
 }
 
-th {
-    background: #f0f2f5;
-    font-weight: 600;
+.data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0f2f7;
+}
+
+.data-table tbody tr:hover {
+    background: #f9fbff;
+    transition: 0.2s ease;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
 }
