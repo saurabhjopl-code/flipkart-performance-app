@@ -4,13 +4,15 @@ import { DATA_SOURCES } from "./config/dataSources.js";
 import { fetchCSV } from "./core/dataFetcher.js";
 import { setRawData, setFilteredData } from "./core/stateManager.js";
 import { startProgress, finishProgress } from "./engines/progress/progressEngine.js";
-import { initFilters, applyFilters } from "./engines/filters/filterEngine.js";
+import { initFilters } from "./engines/filters/filterEngine.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
     initHeader();
-    initFilters();
-    initBinder();
+
+    const renderCallback = initBinder();
+
+    initFilters(renderCallback);
 
     startProgress();
 
@@ -22,8 +24,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setRawData(rawData);
     setFilteredData(rawData);
-
-    applyFilters();
 
     finishProgress();
 
