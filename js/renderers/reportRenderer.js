@@ -1,8 +1,7 @@
-export function renderGmvDailyReport(data) {
+export function renderGmvDailyReport(data, targetId) {
 
-    const container = document.getElementById("gmvReports");
-
-    if (!container) return; // safety guard
+    const container = document.getElementById(targetId);
+    if (!container) return;
 
     if (!data || data.length === 0) {
         container.innerHTML = "<p>No GMV data available for selected period.</p>";
@@ -10,20 +9,20 @@ export function renderGmvDailyReport(data) {
     }
 
     let html = `
-        <h2>GMV Daily Report</h2>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Gross Units</th>
-                    <th>GMV</th>
-                    <th>Cancelled Units</th>
-                    <th>Returned Units</th>
-                    <th>Final Units</th>
-                    <th>Final Revenue</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Gross Units</th>
+                        <th>GMV</th>
+                        <th>Cancelled Units</th>
+                        <th>Returned Units</th>
+                        <th>Final Units</th>
+                        <th>Final Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
 
     data.forEach(row => {
@@ -41,8 +40,9 @@ export function renderGmvDailyReport(data) {
     });
 
     html += `
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     `;
 
     container.innerHTML = html;
