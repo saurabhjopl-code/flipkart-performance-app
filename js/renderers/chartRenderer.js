@@ -1,22 +1,17 @@
-let currentChart = null;
+const charts = {};
 
 export function renderLineChart(canvasId, chartData) {
 
-    const container = document.getElementById("summaryCharts");
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
 
-    container.innerHTML = `
-        <div style="width:100%; height:400px;">
-            <canvas id="${canvasId}"></canvas>
-        </div>
-    `;
+    const ctx = canvas.getContext("2d");
 
-    const ctx = document.getElementById(canvasId).getContext("2d");
-
-    if (currentChart) {
-        currentChart.destroy();
+    if (charts[canvasId]) {
+        charts[canvasId].destroy();
     }
 
-    currentChart = new Chart(ctx, {
+    charts[canvasId] = new Chart(ctx, {
         type: "line",
         data: {
             labels: chartData.labels,
